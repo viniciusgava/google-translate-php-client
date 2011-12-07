@@ -5,7 +5,7 @@
  * New API Library for Google translate V2 in PHP 
  * @link https://github.com/viniciusgava/Google-Translate-API
  * @license http://www.gnu.org/copyleft/gpl.html
- *
+ * @version 1.0
  * @author Vinicius Gava (gava.vinicius@gmail.com)
  */
 class GoogleTranslate {
@@ -34,15 +34,26 @@ class GoogleTranslate {
      */
     private $parameters = array();
 
-
+    /**
+     * Service translate text
+     */
     CONST SERVICE_TRANSLATE = 'translate';
+    /**
+     * Service detect language
+     */
     CONST SERVICE_DETECT = 'detect';
+    /**
+     * Service language support
+     */
     CONST SERVICE_LANGUAGE = 'language';
 
     public function __construct($accessKey) {
         $this->setAccessKey($accessKey);
     }
-
+    /**
+     * Set access key
+     * @param string $key 
+     */
     public function setAccessKey($key) {
         if (strlen($key) == 39) {
             $this->accessKey = $key;
@@ -54,8 +65,8 @@ class GoogleTranslate {
     /**
      * Translate text
      * @param string|array $text The text to be translated
-     * @param string $targetLanguage The language to translate the source text into.
-     * @param string|null|array $sourceLanguage The language of the source text. If a language is not specified, the system will attempt to identify the source language automatically. 
+     * @param string $targetLanguage The language to translate the source text into
+     * @param string|null|array $sourceLanguage The language of the source text. If a language is not specified, the system will attempt to identify the source language automatically
      */
     public function translate($text, $targetLanguage, &$sourceLanguage = null) {
         if ($this->isValid($text, $targetLanguage, $sourceLanguage)) {
@@ -184,7 +195,7 @@ class GoogleTranslate {
     }
 
     /**
-     * validate info
+     * Validate info 
      * @param string|array $text The text or list the text to be validate
      * @param string $targetLanguage target language to be validate
      * @param string $sourceLanguage source language to be validate
@@ -226,11 +237,11 @@ class GoogleTranslate {
     }
 
     /**
-     *
+     * validate language
      * @param string $lang language text to be validate
      * @return boolean 
      */
-    public function validLanguage($lang) {
+    private function validLanguage($lang) {
         $regexpValidLanguage = '%([a-z]{2})(-[a-z]{2})?%';
         if (preg_match($regexpValidLanguage, $lang) == 0) {
             return false;
@@ -266,7 +277,9 @@ class GoogleTranslate {
                 }
             }
         }
+        //init curl
         $this->connect = curl_init($url);
+        //return data receive
         curl_setopt($this->connect, CURLOPT_RETURNTRANSFER, true);
     }
 
@@ -284,6 +297,7 @@ class GoogleTranslate {
         } else {
             $value = utf8_encode($value);
         }
+        //add to param list
         $this->parameters[utf8_encode(str_replace(' ', '', $key))] = $value;
     }
 
@@ -291,10 +305,15 @@ class GoogleTranslate {
      * Close the connect
      */
     private function closeConnect() {
+        //close curl connect
         curl_close($this->connect);
+        //clear params to next request
         $this->parameters = array();
     }
-
+    /**
+     * Execute connect and return array with data
+     * @return array  
+     */
     private function execConnect() {
         //exec curl
         $result = curl_exec($this->connect);
@@ -305,14 +324,17 @@ class GoogleTranslate {
         die();
         //get request info
         $arrInfo = curl_getinfo($this->connect);
-        //no connect
+        //found?
         if ($arrInfo['http_code'] == 404) {
+            //no connect
             throw new GoogleTranslateNotFoundException();
         }
 
         if (($arrInfo['http_code'] == 200 || $arrInfo['http_code'] == 304) && !isset($result->error)) {
+            //request ok, return data
             return $result->data;
         } else {
+            //invalid key
             throw new GoogleTranslateInvalidKeyException();
         }
     }
@@ -320,7 +342,7 @@ class GoogleTranslate {
 }
 
 /**
- * Exception Invalid Access Key
+ * Google Translate Exception Invalid Access Key
  */
 class GoogleTranslateInvalidKeyException extends Exception {
 
@@ -331,12 +353,11 @@ class GoogleTranslateInvalidKeyException extends Exception {
 }
 
 /**
- * Exception Not found 404, probable problem in connect internert
+ * Google Translate Exception Not found 404, probable problem in connect internert
  */
 class GoogleTranslateNotFoundException extends Exception {
-
+    
     function __construct() {
-        parent::__construct('Not found Request', 404);
+        parent::__construct('Not Found Request', 404);
     }
-
 }
