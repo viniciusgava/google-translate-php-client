@@ -3,8 +3,8 @@
 /**
  * Google-Translate-API
  * New API Library for Google translate V2 in PHP 
- * @link
- * @
+ * @link https://github.com/viniciusgava/Google-Translate-API
+ * @license http://www.gnu.org/copyleft/gpl.html
  *
  * @author Vinicius Gava (gava.vinicius@gmail.com)
  */
