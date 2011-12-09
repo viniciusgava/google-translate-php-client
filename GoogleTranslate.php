@@ -319,9 +319,7 @@ class GoogleTranslate {
         $result = curl_exec($this->connect);
         //transform json in stdClass
         $result = json_decode($result);
-        echo '<pre>';
-        print_r($result);
-        die();
+
         //get request info
         $arrInfo = curl_getinfo($this->connect);
         //found?
