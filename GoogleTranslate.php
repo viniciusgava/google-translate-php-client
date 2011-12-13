@@ -77,6 +77,10 @@ class GoogleTranslate {
             $this->addQueryParam('q', $text);
             //add target language
             $this->addQueryParam('target', $targetLanguage);
+            //if source not null, add param to query
+            if(!is_null($sourceLanguage)){
+            $this->addQueryParam('source', $sourceLanguage);                
+            }
             //init connect
             $this->initConnect();
             //get content
@@ -84,7 +88,7 @@ class GoogleTranslate {
             //close connect
             $this->closeConnect();
             //verify this is multiple text
-            if (count($result->translations) == 1) {
+            if (!is_array($text)) {
                 //get only info necessary 
                 $result = current($result->translations);
                 //return by reference the language in case detected language
