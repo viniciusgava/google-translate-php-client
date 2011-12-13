@@ -77,6 +77,10 @@ class GoogleTranslate {
             $this->addQueryParam('q', $text);
             //add target language
             $this->addQueryParam('target', $targetLanguage);
+            // add source language
+            if (!is_null($sourceLanguage)) {
+                $this->addQueryParam('source', $sourceLanguage);
+            }
             //init connect
             $this->initConnect();
             //get content
@@ -88,7 +92,9 @@ class GoogleTranslate {
                 //get only info necessary 
                 $result = current($result->translations);
                 //return by reference the language in case detected language
-                $sourceLanguage = $result->detectedSourceLanguage;
+                if (isset($reponse->detectedSourceLanguage)) {
+                  $sourceLanguage = $result->detectedSourceLanguage;
+                }
                 //return translate
                 return $result->translatedText;
             } else {
