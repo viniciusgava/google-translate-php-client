@@ -67,8 +67,9 @@ class GoogleTranslate {
      * @param string|array $text The text to be translated
      * @param string $targetLanguage The language to translate the source text into
      * @param string|null|array $sourceLanguage The language of the source text. If a language is not specified, the system will attempt to identify the source language automatically
+     * @param boolean $one Returns only the first translation
      */
-    public function translate($text, $targetLanguage, &$sourceLanguage = null) {
+    public function translate($text, $targetLanguage, &$sourceLanguage = null, $one = false) {
         if ($this->isValid($text, $targetLanguage, $sourceLanguage)) {
             reset($text);
             //add keyAccess
@@ -105,6 +106,10 @@ class GoogleTranslate {
                 $arrSourceReturn = array();
                 //get translates
                 foreach ($result as $itemResult) {
+                    if ($one) {
+                        $sourceLanguage = $itemResult->detectedSourceLanguage;
+                        return $itemResult->translatedText;
+                    }
                     $arrTranslateReturn[] = $itemResult->translatedText;
                     $arrSourceReturn[] = $itemResult->detectedSourceLanguage;
                 }
