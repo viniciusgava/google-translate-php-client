@@ -79,7 +79,7 @@ class GoogleTranslate {
             $this->addQueryParam('target', $targetLanguage);
             //if source not null, add param to query
             if(!is_null($sourceLanguage)){
-            $this->addQueryParam('source', $sourceLanguage);                
+                $this->addQueryParam('source', $sourceLanguage);                
             }
             //init connect
             $this->initConnect();
@@ -91,8 +91,12 @@ class GoogleTranslate {
             if (!is_array($text)) {
                 //get only info necessary 
                 $result = current($result->translations);
-                //return by reference the language in case detected language
-                $sourceLanguage = $result->detectedSourceLanguage;
+                
+                if (isset($result->detectedSourceLanguage)) {
+                    //return by reference the language in case detected language
+                    $sourceLanguage = $result->detectedSourceLanguage;
+                }
+                
                 //return translate
                 return $result->translatedText;
             } else {
@@ -106,7 +110,9 @@ class GoogleTranslate {
                 //get translates
                 foreach ($result as $itemResult) {
                     $arrTranslateReturn[] = $itemResult->translatedText;
-                    $arrSourceReturn[] = $itemResult->detectedSourceLanguage;
+                    if (isset($itemResult->detectedSourceLanguage)) {
+                        $arrSourceReturn[] = $itemResult->detectedSourceLanguage;
+                    }
                 }
                 //return by reference the language in case detected language
                 $sourceLanguage = $arrSourceReturn;
