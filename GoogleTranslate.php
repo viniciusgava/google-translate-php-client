@@ -302,10 +302,10 @@ class GoogleTranslate {
         //remove possible whitespaces, utf8 encode AND add to params list
         if (is_array($value)) {
             foreach ($value as $keyValue => $itemValue) {
-                $value[$keyValue] = utf8_encode($itemValue);
+                if (mb_detect_encoding($value[$keyValue])!=="UTF-8") $value[$keyValue] = utf8_encode($itemValue);
             }
         } else {
-            $value = utf8_encode($value);
+            if (mb_detect_encoding($value)!=="UTF-8") $value = utf8_encode($value);
         }
         //add to param list
         $this->parameters[utf8_encode(str_replace(' ', '', $key))] = $value;
