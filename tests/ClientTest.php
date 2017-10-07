@@ -179,6 +179,129 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->client->translate('What\'s your name?', 'pt', $sourceLanguage);
     }
 
+    /**
+     * @expectedException \GoogleTranslate\Exception\InvalidTargetLanguageException
+     * @expectedExceptionMessage Invalid target language
+     * @expectedExceptionCode 3
+     */
+    public function testLanguagesMethodWithInvalidTargetLanguageShouldReturnInvalidTargetLanguageException()
+    {
+        $this->client->languages('12');
+    }
+
+    public function testLanguagesMethodWithTargetLanguageShouldReturnLanguagesSupportedCodeAndName()
+    {
+        $requestParams = [
+            'GET',
+            'https://www.googleapis.com/language/translate/v2/languages',
+            ['query' => 'key=' . self::ACCESS_KEY . '&target=pt-br']
+        ];
+
+        $body = '{"data":{"languages":[{"language":"de","name":"Alemão"},{"language":"ga","name":"Irlandês"},{"language":"it","name":"Italiano"},{"language":"ja","name":"Japonês"}]}}';
+
+        $this->httpClientMock($requestParams, $body);
+
+        $languages = $this->client->languages('pt-br');
+
+        $this->assertInternalType('array', $languages);
+        $this->assertEquals(4, count($languages));
+
+        $expectedValues = [
+            [
+                'language' => 'de',
+                'name' => 'Alemão'
+            ],
+            [
+                'language' => 'ga',
+                'name' => 'Irlandês'
+            ],
+            [
+                'language' => 'it',
+                'name' => 'Italiano'
+            ],
+            [
+                'language' => 'ja',
+                'name' => 'Japonês'
+            ]
+        ];
+
+        foreach ($languages as $index => $language) {
+            $this->assertArrayHasKey('language', $language);
+            $this->assertArrayHasKey('name', $language);
+            $this->assertEquals($expectedValues[$index]['language'], $language['language']);
+            $this->assertEquals($expectedValues[$index]['name'], $language['name']);
+        }
+    }
+
+    public function testLanguagesMethodShouldReturnLanguagesSupportedCodes()
+    {
+        $requestParams = [
+            'GET',
+            'https://www.googleapis.com/language/translate/v2/languages',
+            ['query' => 'key=' . self::ACCESS_KEY . '&target=pt-br']
+        ];
+
+        $body = '{"data":{"languages":[{"language":"de"},{"language":"ga"},{"language":"it"},{"language":"ja"}]}}';
+
+        $this->httpClientMock($requestParams, $body);
+
+        $languages = $this->client->languages('pt-br');
+
+        $this->assertInternalType('array', $languages);
+        $this->assertEquals(4, count($languages));
+
+        $expectedValues = [
+            ['language' => 'de'],
+            ['language' => 'ga'],
+            ['language' => 'it'],
+            ['language' => 'ja']
+        ];
+
+        foreach ($languages as $index => $language) {
+            $this->assertArrayHasKey('language', $language);
+            $this->assertEquals($expectedValues[$index]['language'], $language['language']);
+        }
+    }
+
+    public function testLanguagesMethodWithInvalidTargetLanguageShouldReturnLanguagesErrorException()
+    {
+        $this->expectException('\GoogleTranslate\Exception\LanguagesErrorException');
+        $this->expectExceptionMessage('Languages error: Client error: `GET https://www.googleapis.com/language/translate/v2/languages?key=' . self::ACCESS_KEY . '&target=aa-aa` resulted in a `400 Bad Request` response:');
+        $this->expectExceptionCode(5);
+
+        $requestParams = [
+            'GET',
+            'https://www.googleapis.com/language/translate/v2/languages',
+            ['query' => 'key=' . self::ACCESS_KEY . '&target=aa-aa']
+        ];
+
+        $mockGuzzleException = new TransferException('Client error: `GET https://www.googleapis.com/language/translate/v2/languages?key=' . self::ACCESS_KEY . '&target=aa-aa` resulted in a `400 Bad Request` response:');
+        $this->httpClientMock->method('request')
+            ->withConsecutive($requestParams)
+            ->willThrowException($mockGuzzleException);
+
+        $this->client->languages('aa-aa');
+    }
+
+    /**
+     * @expectedException \GoogleTranslate\Exception\LanguagesErrorException
+     * @expectedExceptionMessage Invalid response
+     * @expectedExceptionCode 5
+     */
+    public function testLanguagesMethodWithMalformedJsonResponseShouldReturnLanguagesErrorException()
+    {
+        $requestParams = [
+            'GET',
+            'https://www.googleapis.com/language/translate/v2/languages',
+            ['query' => 'key=' . self::ACCESS_KEY]
+        ];
+
+        $body = '{"data":{}}';
+
+        $this->httpClientMock($requestParams, $body);
+        $this->client->languages();
+    }
+
     public function httpClientMock($requestParams, $body)
     {
         $responseMock = $this->createMock(ResponseInterface::class);

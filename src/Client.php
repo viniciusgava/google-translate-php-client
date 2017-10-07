@@ -6,7 +6,7 @@ use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 
-class Client implements TranslateInterface
+class Client implements TranslateInterface, LanguagesInterface
 {
     /**
      * API URI
@@ -97,9 +97,7 @@ class Client implements TranslateInterface
                 self::API_URI,
                 ['query' => $query]
             );
-        }
-
-        catch (GuzzleException $e) {
+        } catch (GuzzleException $e) {
             throw new Exception\TranslationErrorException('Translation error: ' . $e->getMessage(), 4, $e);
         }
 
@@ -126,6 +124,46 @@ class Client implements TranslateInterface
         }
 
         return $onceResult ? current($translations) : $translations;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function languages($targetLanguage = null)
+    {
+        if ($targetLanguage && !$this->isValidLanguage($targetLanguage)) {
+            throw new Exception\InvalidTargetLanguageException();
+        }
+
+        // query params
+        $query = [
+            'key' => $this->accessKey,
+        ];
+
+        if ($targetLanguage) {
+            $query['target'] = $targetLanguage;
+        }
+
+        try {
+            // send request
+            $query = $this->httpBuildQuery($query);
+
+            $response = $this->getHttpClient()->request(
+                'GET',
+                self::API_URI . '/languages',
+                ['query' => $query]
+            );
+        } catch (GuzzleException $e) {
+            throw new Exception\LanguagesErrorException('Languages error: ' . $e->getMessage(), 5, $e);
+        }
+
+        // check response json
+        $result = json_decode($response->getBody(), true);
+        if (!is_array($result) || !array_key_exists('data', $result) || !array_key_exists('languages', $result['data'])) {
+            throw new Exception\LanguagesErrorException('Invalid response');
+        }
+
+        return $result['data']['languages'];
     }
 
     /**
