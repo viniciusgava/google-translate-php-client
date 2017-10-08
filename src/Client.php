@@ -6,6 +6,14 @@ use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 
+/**
+ * Google Translate API PHP Client
+ *
+ * @link https://github.com/viniciusgava/google-translate-php-client
+ * @license http://www.gnu.org/copyleft/gpl.html
+ * @version 2.0
+ * @author Vinicius Gava (gava.vinicius@gmail.com)
+ */
 class Client implements TranslateInterface, LanguagesInterface, DetectInterface
 {
     /**
