@@ -302,6 +302,125 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->client->languages();
     }
 
+    /**
+     * @expectedException \GoogleTranslate\Exception\InvalidTextException
+     * @expectedExceptionMessage Invalid text
+     * @expectedExceptionCode 2
+     */
+    public function testDetectMethodWithInvalidTextShouldReturnInvalidTextException()
+    {
+        $this->client->detect(null);
+    }
+
+    public function testDetectMethodWithSingleStringShouldReturnLanguageAndConfidenceLevelAndIsReliable()
+    {
+        $requestParams = [
+            'POST',
+            'https://www.googleapis.com/language/translate/v2/detect',
+            ['query' => 'key=' . self::ACCESS_KEY . '&q=What%27s+your+name%3F']
+        ];
+
+        $body = '{"data":{"detections":[[{"confidence":0.25199580192565918,"isReliable":false,"language":"en"}]]}}';
+
+        $this->httpClientMock($requestParams, $body);
+
+        $detection = $this->client->detect('What\'s your name?');
+
+        $this->assertInternalType('array', $detection);
+
+        $this->assertArrayHasKey('confidence', $detection);
+        $this->assertEquals(0.25199580192565918, $detection['confidence']);
+
+        $this->assertArrayHasKey('isReliable', $detection);
+        $this->assertFalse($detection['isReliable']);
+
+        $this->assertArrayHasKey('language', $detection);
+        $this->assertEquals('en', $detection['language']);
+    }
+
+    public function testDetectMethodWithMultipleStringShouldReturnLanguageAndConfidenceLevelAndIsReliable()
+    {
+        $requestParams = [
+            'POST',
+            'https://www.googleapis.com/language/translate/v2/detect',
+            ['query' => 'q%5B0%5D=What%27s+your+name%3F&q%5B1%5D=Quem+%C3%A9+voc%C3%AA%3F&key=' . self::ACCESS_KEY]
+        ];
+
+        $body = '{"data":{"detections":[[{"isReliable":false,"language":"en","confidence":0.25199580192565918}],[{"confidence":0.28993061184883118,"isReliable":false,"language":"pt"}]]}}';
+
+        $this->httpClientMock($requestParams, $body);
+
+        $expectedValues = [
+            [
+                'isReliable' => false,
+                'language' => 'en',
+                'confidence' => 0.25199580192565918
+            ],
+            [
+                'isReliable' => false,
+                'language' => 'pt',
+                'confidence' => 0.28993061184883118
+            ]
+        ];
+
+        $detections = $this->client->detect([
+            'What\'s your name?',
+            'Quem é você?'
+        ]);
+
+        $this->assertInternalType('array', $detections);
+
+        foreach ($detections as $index => $detection) {
+            $this->assertArrayHasKey('confidence', $detection);
+            $this->assertEquals($expectedValues[$index]['confidence'], $detection['confidence']);
+
+            $this->assertArrayHasKey('isReliable', $detection);
+            $this->assertEquals($expectedValues[$index]['isReliable'], $detection['isReliable']);
+
+            $this->assertArrayHasKey('language', $detection);
+            $this->assertEquals($expectedValues[$index]['language'], $detection['language']);
+        }
+    }
+
+    /**
+     * @expectedException \GoogleTranslate\Exception\DetectErrorException
+     * @expectedExceptionMessage Invalid response
+     * @expectedExceptionCode 6
+     */
+    public function testDetectMethodWithSingleStringAndMalformedJsonResponseShouldReturnDetectErrorException()
+    {
+        $requestParams = [
+            'POST',
+            'https://www.googleapis.com/language/translate/v2/detect',
+            ['query' => 'key=' . self::ACCESS_KEY . '&q=What%27s+your+name%3F']
+        ];
+
+        $body = '{"data":{}}';
+
+        $this->httpClientMock($requestParams, $body);
+        $this->client->detect('What\'s your name?');
+    }
+
+    public function testDetectMethodWithSingleStringShouldReturnTranslationErrorException()
+    {
+        $this->expectException('\GoogleTranslate\Exception\DetectErrorException');
+        $this->expectExceptionMessage('Detect error: Client error: `POST https://www.googleapis.com/language/translate/v2/detect?key=' . self::ACCESS_KEY . '&q=What%27s+your+name%3F` resulted in a `400 Bad Request` response:');
+        $this->expectExceptionCode(6);
+
+        $requestParams = [
+            'POST',
+            'https://www.googleapis.com/language/translate/v2/detect',
+            ['query' => 'key=' . self::ACCESS_KEY . '&q=What%27s+your+name%3F']
+        ];
+
+        $mockGuzzleException = new TransferException('Client error: `POST https://www.googleapis.com/language/translate/v2/detect?key=' . self::ACCESS_KEY . '&q=What%27s+your+name%3F` resulted in a `400 Bad Request` response:');
+        $this->httpClientMock->method('request')
+            ->withConsecutive($requestParams)
+            ->willThrowException($mockGuzzleException);
+
+        $this->client->detect('What\'s your name?');
+    }
+
     public function httpClientMock($requestParams, $body)
     {
         $responseMock = $this->createMock(ResponseInterface::class);

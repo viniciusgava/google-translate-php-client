@@ -6,7 +6,7 @@ use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 
-class Client implements TranslateInterface, LanguagesInterface
+class Client implements TranslateInterface, LanguagesInterface, DetectInterface
 {
     /**
      * API URI
@@ -164,6 +164,58 @@ class Client implements TranslateInterface, LanguagesInterface
         }
 
         return $result['data']['languages'];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function detect($text)
+    {
+        // used to return the same type of variable used in the text
+        $onceResult = !is_array($text);
+
+        // prepare the string
+        $text = $this->prepareText($text);
+
+        // validate if required fields has being filled.
+        if (!$text) {
+            throw new Exception\InvalidTextException();
+        }
+
+        // query params
+        $query = [
+            'key' => $this->accessKey,
+            'q' => $text
+        ];
+
+        try {
+            // send request
+            $query = $this->httpBuildQuery($query);
+
+            $response = $this->getHttpClient()->request(
+                'POST',
+                self::API_URI . '/detect',
+                ['query' => $query]
+            );
+        } catch (GuzzleException $e) {
+            throw new Exception\DetectErrorException('Detect error: ' . $e->getMessage(), 6, $e);
+        }
+
+        // check response json
+        $result = json_decode($response->getBody(), true);
+        if (!is_array($result) || !array_key_exists('data', $result) || !array_key_exists('detections', $result['data'])) {
+            throw new Exception\DetectErrorException('Invalid response');
+        }
+
+        $result = $result['data']['detections'];
+
+        // remove array of array in the results
+        $processedResult = [];
+        foreach ($result as $item) {
+            $processedResult[] = current($item);
+        }
+
+        return $onceResult ? current($processedResult) : $processedResult;
     }
 
     /**

@@ -10,6 +10,6 @@ class InvalidLanguageException extends \InvalidArgumentException
         $code = 3,
         \Exception $previous = null
     ) {
-        parent::__construct($message,$code,$previous);
+        parent::__construct($message, $code, $previous);
     }
 }

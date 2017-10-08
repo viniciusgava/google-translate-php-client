@@ -10,6 +10,6 @@ class LanguagesErrorException extends \DomainException
         $code = 5,
         \Exception $previous = null
     ) {
-        parent::__construct($message,$code,$previous);
+        parent::__construct($message, $code, $previous);
     }
 }

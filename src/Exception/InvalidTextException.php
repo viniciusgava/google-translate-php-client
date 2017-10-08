@@ -10,6 +10,6 @@ class InvalidTextException extends \InvalidArgumentException
         $code = 2,
         \Exception $previous = null
     ) {
-        parent::__construct($message,$code,$previous);
+        parent::__construct($message, $code, $previous);
     }
 }

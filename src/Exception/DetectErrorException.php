@@ -2,12 +2,12 @@
 
 namespace GoogleTranslate\Exception;
 
-class InvalidAccessKeyException extends \InvalidArgumentException
+class DetectErrorException extends \DomainException
 {
     /** @inheritdoc */
     public function __construct(
-        $message = 'Invalid access key',
-        $code = 1,
+        $message = 'Detect Error',
+        $code = 6,
         \Exception $previous = null
     ) {
         parent::__construct($message, $code, $previous);
