@@ -142,8 +142,8 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
     public function testTranslateMethodWithSingleAndInvalidTargetLanguageShouldReturnTranslationErrorException()
     {
-        $this->expectException('\GoogleTranslate\Exception\TranslationErrorException');
-        $this->expectExceptionMessage('Translation error: Client error: `POST https://www.googleapis.com/language/translate/v2?key=' . self::ACCESS_KEY . '&q=estou+aqui&target=aa` resulted in a `400 Bad Request` response:');
+        $this->expectException('\GoogleTranslate\Exception\TranslateErrorException');
+        $this->expectExceptionMessage('Translate error: Client error: `POST https://www.googleapis.com/language/translate/v2?key=' . self::ACCESS_KEY . '&q=estou+aqui&target=aa` resulted in a `400 Bad Request` response:');
         $this->expectExceptionCode(4);
 
         $requestParams = [
@@ -161,7 +161,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \GoogleTranslate\Exception\TranslationErrorException
+     * @expectedException \GoogleTranslate\Exception\TranslateErrorException
      * @expectedExceptionMessage Invalid response
      * @expectedExceptionCode 4
      */

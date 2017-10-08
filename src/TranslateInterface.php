@@ -20,7 +20,7 @@ interface TranslateInterface
      * @throws Exception\InvalidTextException
      * @throws Exception\InvalidTargetLanguageException
      * @throws Exception\InvalidSourceLanguageException
-     * @throws Exception\TranslationErrorException
+     * @throws Exception\TranslateErrorException
      */
     public function translate($text, $targetLanguage, &$sourceLanguage = null);
 }

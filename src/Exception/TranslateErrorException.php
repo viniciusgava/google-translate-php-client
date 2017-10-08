@@ -2,11 +2,11 @@
 
 namespace GoogleTranslate\Exception;
 
-class TranslationErrorException extends \DomainException
+class TranslateErrorException extends \DomainException
 {
     /** @inheritdoc */
     public function __construct(
-        $message = 'Translation Error',
+        $message = 'Translate Error',
         $code = 4,
         \Exception $previous = null
     ) {

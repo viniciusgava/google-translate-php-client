@@ -20,7 +20,7 @@ interface LanguagesInterface
      * @return array array structure return above
      *
      * @throws Exception\InvalidTargetLanguageException
-     * @throws Exception\TranslationErrorException
+     * @throws Exception\TranslateErrorException
      */
     public function languages($targetLanguage = null);
 }

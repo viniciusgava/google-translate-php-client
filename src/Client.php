@@ -99,7 +99,7 @@ class Client implements TranslateInterface, LanguagesInterface, DetectInterface
                 ['query' => $query]
             );
         } catch (GuzzleException $e) {
-            throw new Exception\TranslationErrorException('Translation error: ' . $e->getMessage(), 4, $e);
+            throw new Exception\TranslateErrorException('Translate error: ' . $e->getMessage(), 4, $e);
         }
 
         // check response json
@@ -108,7 +108,7 @@ class Client implements TranslateInterface, LanguagesInterface, DetectInterface
             !array_key_exists('data', $result) ||
             !array_key_exists('translations', $result['data'])
         ) {
-            throw new Exception\TranslationErrorException('Invalid response');
+            throw new Exception\TranslateErrorException('Invalid response');
         }
 
         // prepare responses
