@@ -1,7 +1,9 @@
 {
     "name": "viniciusgava/google-translate-api",
     "description": "Google translate API V2 client for PHP",
-    "license": "http://www.gnu.org/copyleft/gpl.html",
+    "license": "GNU",
+    "homepage": "https://github.com/viniciusgava/google-translate-php-client",
+    "keywords": ["google", "translate", "client", "adapter"],
     "authors": [
         {
             "name": "Vinicius Gava",
@@ -19,7 +21,7 @@
         }
     },
     "require": {
-        "php": ">5.6",
+        "php": ">=5.6",
         "guzzlehttp/guzzle": "^6.3"
     },
     "require-dev": {
