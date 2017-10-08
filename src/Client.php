@@ -49,7 +49,8 @@ class Client implements TranslateInterface, LanguagesInterface, DetectInterface
     /**
      * @return \GuzzleHttp\ClientInterface
      */
-    private function getHttpClient() {
+    private function getHttpClient()
+    {
         return $this->httpClient;
     }
 
@@ -103,7 +104,10 @@ class Client implements TranslateInterface, LanguagesInterface, DetectInterface
 
         // check response json
         $result = json_decode($response->getBody(), true);
-        if (!is_array($result) || !array_key_exists('data', $result) || !array_key_exists('translations', $result['data'])) {
+        if (!is_array($result) ||
+            !array_key_exists('data', $result) ||
+            !array_key_exists('translations', $result['data'])
+        ) {
             throw new Exception\TranslationErrorException('Invalid response');
         }
 
@@ -111,7 +115,7 @@ class Client implements TranslateInterface, LanguagesInterface, DetectInterface
         $translations = [];
         $sources = [];
         foreach ($result['data']['translations'] as $translation) {
-            $translations[] = html_entity_decode($translation['translatedText'] , ENT_QUOTES, 'UTF-8');
+            $translations[] = html_entity_decode($translation['translatedText'], ENT_QUOTES, 'UTF-8');
 
             if (array_key_exists('detectedSourceLanguage', $translation)) {
                 $sources[] = $translation['detectedSourceLanguage'];
@@ -159,7 +163,10 @@ class Client implements TranslateInterface, LanguagesInterface, DetectInterface
 
         // check response json
         $result = json_decode($response->getBody(), true);
-        if (!is_array($result) || !array_key_exists('data', $result) || !array_key_exists('languages', $result['data'])) {
+        if (!is_array($result) ||
+            !array_key_exists('data', $result) ||
+            !array_key_exists('languages', $result['data'])
+        ) {
             throw new Exception\LanguagesErrorException('Invalid response');
         }
 
@@ -203,7 +210,10 @@ class Client implements TranslateInterface, LanguagesInterface, DetectInterface
 
         // check response json
         $result = json_decode($response->getBody(), true);
-        if (!is_array($result) || !array_key_exists('data', $result) || !array_key_exists('detections', $result['data'])) {
+        if (!is_array($result) ||
+            !array_key_exists('data', $result) ||
+            !array_key_exists('detections', $result['data'])
+        ) {
             throw new Exception\DetectErrorException('Invalid response');
         }
 
@@ -267,7 +277,8 @@ class Client implements TranslateInterface, LanguagesInterface, DetectInterface
      * @param string $language language to be validate
      * @return boolean
      */
-    private function isValidLanguage($language) {
+    private function isValidLanguage($language)
+    {
         $regexpValidLanguage = '%([a-z]{2})(-[a-z]{2})?%';
 
         return preg_match($regexpValidLanguage, $language) === 1;
