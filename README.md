@@ -10,7 +10,7 @@ composer require viniciusgava/google-translate-api
 ```
 
 ## Examples of Usage
-###Translate with source language detection 
+### Translate with source language detection 
 ```php
 <?php
 require_once 'vendor/autoload.php';
@@ -24,7 +24,7 @@ echo $sourceLanguage;
 // output: en
 ```
 
-###Translate without source language detection
+### Translate without source language detection
 ```php
 <?php
 require_once 'vendor/autoload.php';
@@ -36,7 +36,7 @@ echo $client->translate('Onde estou?', 'en', $sourceLanguage);
 // output: Where am I?
 ```
 
-###Translate bundle of texts with language detection
+### Translate bundle of texts with language detection
 ```php
 <?php
 require_once 'vendor/autoload.php';
