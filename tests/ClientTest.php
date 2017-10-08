@@ -81,7 +81,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $requestParams = [
             'POST',
             'https://www.googleapis.com/language/translate/v2',
-            ['query' => 'key=' . self::ACCESS_KEY . '&q=What%27s+your+name%3F&target=pt']
+            ['query' => 'q=What%27s+your+name%3F&target=pt&key=' . self::ACCESS_KEY]
         ];
 
         $body = '{"data":{"translations":[{"translatedText":"Qual o seu nome?","detectedSourceLanguage":"en"}]}}';
@@ -99,7 +99,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $requestParams = [
             'POST',
             'https://www.googleapis.com/language/translate/v2',
-            ['query' => 'q%5B0%5D=What%27s+your+name%3F%5D&q%5B1%5D=What+are+you+doing%3F&key=' . self::ACCESS_KEY . '&target=pt']
+            ['query' => 'q=What%27s+your+name%3F%5D&q=What+are+you+doing%3F&target=pt&key=' . self::ACCESS_KEY]
         ];
 
         $body = '{"data":{"translations":[{"translatedText":"Qual o seu nome?","detectedSourceLanguage":"en"},{"translatedText":"O que você está fazendo?","detectedSourceLanguage":"en"}]}}';
@@ -126,7 +126,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $requestParams = [
             'POST',
             'https://www.googleapis.com/language/translate/v2',
-            ['query' => 'key=' . self::ACCESS_KEY . '&q=What%27s+your+name%3F&target=pt&source=en']
+            ['query' => 'q=What%27s+your+name%3F&target=pt&source=en&key=' . self::ACCESS_KEY]
         ];
 
         $body = '{"data":{"translations":[{"translatedText":"Qual o seu nome?"}]}}';
@@ -149,7 +149,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $requestParams = [
             'POST',
             'https://www.googleapis.com/language/translate/v2',
-            ['query' => 'key=' . self::ACCESS_KEY . '&q=What%27s+your+name%3F&target=aa']
+            ['query' => 'q=What%27s+your+name%3F&target=aa&key=' . self::ACCESS_KEY]
         ];
 
         $mockGuzzleException = new TransferException('Client error: `POST https://www.googleapis.com/language/translate/v2?key=' . self::ACCESS_KEY . '&q=estou+aqui&target=aa` resulted in a `400 Bad Request` response:');
@@ -170,7 +170,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $requestParams = [
             'POST',
             'https://www.googleapis.com/language/translate/v2',
-            ['query' => 'key=' . self::ACCESS_KEY . '&q=What%27s+your+name%3F&target=pt']
+            ['query' => 'q=What%27s+your+name%3F&target=pt&key=' . self::ACCESS_KEY]
         ];
 
         $body = '{"data":{}}';
@@ -317,7 +317,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $requestParams = [
             'POST',
             'https://www.googleapis.com/language/translate/v2/detect',
-            ['query' => 'key=' . self::ACCESS_KEY . '&q=What%27s+your+name%3F']
+            ['query' => 'q=What%27s+your+name%3F&key=' . self::ACCESS_KEY]
         ];
 
         $body = '{"data":{"detections":[[{"confidence":0.25199580192565918,"isReliable":false,"language":"en"}]]}}';
@@ -343,7 +343,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $requestParams = [
             'POST',
             'https://www.googleapis.com/language/translate/v2/detect',
-            ['query' => 'q%5B0%5D=What%27s+your+name%3F&q%5B1%5D=Quem+%C3%A9+voc%C3%AA%3F&key=' . self::ACCESS_KEY]
+            ['query' => 'q=What%27s+your+name%3F&q=Quem+%C3%A9+voc%C3%AA%3F&key=' . self::ACCESS_KEY]
         ];
 
         $body = '{"data":{"detections":[[{"isReliable":false,"language":"en","confidence":0.25199580192565918}],[{"confidence":0.28993061184883118,"isReliable":false,"language":"pt"}]]}}';
@@ -392,7 +392,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $requestParams = [
             'POST',
             'https://www.googleapis.com/language/translate/v2/detect',
-            ['query' => 'key=' . self::ACCESS_KEY . '&q=What%27s+your+name%3F']
+            ['query' => 'q=What%27s+your+name%3F&key=' . self::ACCESS_KEY]
         ];
 
         $body = '{"data":{}}';
@@ -410,7 +410,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $requestParams = [
             'POST',
             'https://www.googleapis.com/language/translate/v2/detect',
-            ['query' => 'key=' . self::ACCESS_KEY . '&q=What%27s+your+name%3F']
+            ['query' => 'q=What%27s+your+name%3F&key=' . self::ACCESS_KEY]
         ];
 
         $mockGuzzleException = new TransferException('Client error: `POST https://www.googleapis.com/language/translate/v2/detect?key=' . self::ACCESS_KEY . '&q=What%27s+your+name%3F` resulted in a `400 Bad Request` response:');

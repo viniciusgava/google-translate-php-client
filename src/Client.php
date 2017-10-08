@@ -67,16 +67,16 @@ class Client implements TranslateInterface, LanguagesInterface, DetectInterface
      */
     public function translate($text, $targetLanguage, &$sourceLanguage = null)
     {
+        // validate if required fields has being filled.
+        if (!$text) {
+            throw new Exception\InvalidTextException();
+        }
+
         // used to return the same type of variable used in the text
         $onceResult = !is_array($text);
 
         // prepare the string
         $text = $this->prepareText($text);
-
-        // validate if required fields has being filled.
-        if (!$text) {
-            throw new Exception\InvalidTextException();
-        }
 
         if (!$this->isValidLanguage($targetLanguage)) {
             throw new Exception\InvalidTargetLanguageException();
@@ -84,9 +84,8 @@ class Client implements TranslateInterface, LanguagesInterface, DetectInterface
 
         // query params
         $query = [
-            'key' => $this->accessKey,
             'q' => $text,
-            'target' => $targetLanguage,
+            'target' => $targetLanguage
         ];
 
         // validate if is necessary to pass the source language.
@@ -96,6 +95,9 @@ class Client implements TranslateInterface, LanguagesInterface, DetectInterface
         if ($sourceLanguage) {
             $query['source'] = $sourceLanguage;
         }
+
+        // add access key
+        $query['key'] = $this->accessKey;
 
         try {
             // send request
@@ -186,21 +188,21 @@ class Client implements TranslateInterface, LanguagesInterface, DetectInterface
      */
     public function detect($text)
     {
+        // validate if required fields has being filled.
+        if (!$text) {
+            throw new Exception\InvalidTextException();
+        }
+
         // used to return the same type of variable used in the text
         $onceResult = !is_array($text);
 
         // prepare the string
         $text = $this->prepareText($text);
 
-        // validate if required fields has being filled.
-        if (!$text) {
-            throw new Exception\InvalidTextException();
-        }
-
         // query params
         $query = [
+            'q' => $text,
             'key' => $this->accessKey,
-            'q' => $text
         ];
 
         try {
@@ -272,7 +274,7 @@ class Client implements TranslateInterface, LanguagesInterface, DetectInterface
     private function prepareText($text)
     {
         // convert no array text to array
-        if (is_array($text)) {
+        if (!is_array($text)) {
             $text = [$text];
         }
 
