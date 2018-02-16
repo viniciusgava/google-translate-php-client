@@ -1,7 +1,7 @@
 {
     "name": "viniciusgava/google-translate-api",
     "description": "Google translate API V2 client for PHP",
-    "license": "GNU",
+    "license": "MIT",
     "homepage": "https://github.com/viniciusgava/google-translate-php-client",
     "keywords": ["google", "translate", "client", "adapter"],
     "authors": [

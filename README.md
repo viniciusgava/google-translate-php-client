@@ -1,5 +1,7 @@
 # Google Translate API PHP Client
 
+[![Build Status](https://travis-ci.org/viniciusgava/google-translate-php-client.svg?branch=master)](https://travis-ci.org/viniciusgava/google-translate-php-client)
+
 This project abstract the google translate api versio 2.0 in PHP. 
 The lib has been refactored to support unit tests, composer, and a better architecture.
 
