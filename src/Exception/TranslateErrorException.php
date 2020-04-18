@@ -7,7 +7,6 @@ namespace GoogleTranslate\Exception;
  *
  * @link https://github.com/viniciusgava/google-translate-php-client
  * @license http://www.gnu.org/copyleft/gpl.html
- * @version 2.0
  * @author Vinicius Gava (gava.vinicius@gmail.com)
  */
 class TranslateErrorException extends \DomainException
