@@ -7,7 +7,6 @@ namespace GoogleTranslate;
  *
  * @link https://github.com/viniciusgava/google-translate-php-client
  * @license http://www.gnu.org/copyleft/gpl.html
- * @version 2.0
  * @author Vinicius Gava (gava.vinicius@gmail.com)
  */
 interface TranslateInterface
@@ -30,5 +29,5 @@ interface TranslateInterface
      * @throws Exception\InvalidSourceLanguageException
      * @throws Exception\TranslateErrorException
      */
-    public function translate($text, $targetLanguage, &$sourceLanguage = null);
+    public function translate($text, string $targetLanguage, &$sourceLanguage = null);
 }

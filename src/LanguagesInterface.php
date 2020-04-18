@@ -7,7 +7,6 @@ namespace GoogleTranslate;
  *
  * @link https://github.com/viniciusgava/google-translate-php-client
  * @license http://www.gnu.org/copyleft/gpl.html
- * @version 2.0
  * @author Vinicius Gava (gava.vinicius@gmail.com)
  */
 interface LanguagesInterface
@@ -24,11 +23,11 @@ interface LanguagesInterface
      *      (...)
      * ]
      *
-     * @param string $targetLanguage Target language. ie: pt, en, es
+     * @param string|null $targetLanguage Target language. ie: pt, en, es
      * @return array array structure return above
      *
      * @throws Exception\InvalidTargetLanguageException
      * @throws Exception\TranslateErrorException
      */
-    public function languages($targetLanguage = null);
+    public function languages(string $targetLanguage = null);
 }
