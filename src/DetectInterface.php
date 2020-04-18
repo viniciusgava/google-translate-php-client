@@ -30,5 +30,5 @@ interface DetectInterface
      * @throws Exception\InvalidTextException
      * @throws Exception\DetectErrorException
      */
-    public function detect($text);
+    public function detect($text): array;
 }

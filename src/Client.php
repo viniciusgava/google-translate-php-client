@@ -40,7 +40,7 @@ class Client implements TranslateInterface, LanguagesInterface, DetectInterface
      * @param string $accessKey
      * @param ClientInterface $httpClient
      */
-    public function __construct($accessKey, ClientInterface $httpClient = null)
+    public function __construct(string $accessKey, ClientInterface $httpClient = null)
     {
         if (strlen($accessKey) !== 39) {
             throw new Exception\InvalidAccessKeyException();
@@ -65,7 +65,7 @@ class Client implements TranslateInterface, LanguagesInterface, DetectInterface
     /**
      * @inheritdoc
      */
-    public function translate($text, $targetLanguage, &$sourceLanguage = null)
+    public function translate($text, string $targetLanguage, &$sourceLanguage = null)
     {
         // validate if required fields has being filled.
         if (!$text) {
@@ -143,7 +143,7 @@ class Client implements TranslateInterface, LanguagesInterface, DetectInterface
     /**
      * @inheritdoc
      */
-    public function languages($targetLanguage = null)
+    public function languages(string $targetLanguage = null)
     {
         if ($targetLanguage && !$this->isValidLanguage($targetLanguage)) {
             throw new Exception\InvalidTargetLanguageException();
@@ -186,7 +186,7 @@ class Client implements TranslateInterface, LanguagesInterface, DetectInterface
     /**
      * @inheritdoc
      */
-    public function detect($text)
+    public function detect($text): array
     {
         // validate if required fields has being filled.
         if (!$text) {

@@ -24,11 +24,11 @@ interface LanguagesInterface
      *      (...)
      * ]
      *
-     * @param string $targetLanguage Target language. ie: pt, en, es
+     * @param string|null $targetLanguage Target language. ie: pt, en, es
      * @return array array structure return above
      *
      * @throws Exception\InvalidTargetLanguageException
      * @throws Exception\TranslateErrorException
      */
-    public function languages($targetLanguage = null);
+    public function languages(string $targetLanguage = null);
 }

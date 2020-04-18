@@ -5,9 +5,10 @@ namespace GoogleTranslate\Tests;
 use GoogleTranslate\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\TransferException;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Message\ResponseInterface;
 
-class ClientTest extends \PHPUnit_Framework_TestCase
+class ClientTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var string
@@ -20,58 +21,54 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     private $client;
 
     /**
-     * @var ClientInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var ClientInterface|MockObject
      */
     private $httpClientMock;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->httpClientMock = $this->createMock(ClientInterface::class);
         $this->client = new Client(self::ACCESS_KEY, $this->httpClientMock);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->client = null;
     }
 
-    /**
-     * @expectedException \GoogleTranslate\Exception\InvalidAccessKeyException
-     * @expectedExceptionMessage Invalid access key
-     * @expectedExceptionCode 1
-     */
     public function testInstanceClientWithInvalidAccessKeyShouldReturnInvalidAccessKeyException()
     {
+        $this->expectException(\GoogleTranslate\Exception\InvalidAccessKeyException::class);
+        $this->expectExceptionMessage('Invalid access key');
+        $this->expectExceptionCode(1);
+
         $this->client = new Client('asd');
     }
 
-    /**
-     * @expectedException \GoogleTranslate\Exception\InvalidTextException
-     * @expectedExceptionMessage Invalid text
-     * @expectedExceptionCode 2
-     */
     public function testTranslateMethodWithInvalidTextShouldReturnInvalidTextException()
     {
+        $this->expectException(\GoogleTranslate\Exception\InvalidTextException::class);
+        $this->expectExceptionMessage('Invalid text');
+        $this->expectExceptionCode(2);
+
         $this->client->translate(null, 'en');
     }
 
-    /**
-     * @expectedException \GoogleTranslate\Exception\InvalidTargetLanguageException
-     * @expectedExceptionMessage Invalid target language
-     * @expectedExceptionCode 3
-     */
     public function testTranslateMethodWithInvalidTargetLanguageShouldReturnInvalidTargetLanguageException()
     {
+        $this->expectException(\GoogleTranslate\Exception\InvalidTargetLanguageException::class);
+        $this->expectExceptionMessage('Invalid target language');
+        $this->expectExceptionCode(3);
+
         $this->client->translate('How are you?', '12');
     }
 
-    /**
-     * @expectedException \GoogleTranslate\Exception\InvalidSourceLanguageException
-     * @expectedExceptionMessage Invalid source language
-     * @expectedExceptionCode 3
-     */
     public function testTranslateMethodWithInvalidSourceLanguageShouldReturnInvalidSourceLanguageException()
     {
+        $this->expectException(\GoogleTranslate\Exception\InvalidSourceLanguageException::class);
+        $this->expectExceptionMessage('Invalid source language');
+        $this->expectExceptionCode(3);
+
         $sourceLanguage = '34';
         $this->client->translate('How are you?', 'pt', $sourceLanguage);
     }
@@ -112,11 +109,11 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             $sourceLanguage
         );
 
-        $this->assertInternalType('array', $translatedText);
+        $this->assertIsArray($translatedText);
         $this->assertEquals('Qual o seu nome?', $translatedText[0]);
         $this->assertEquals('O que você está fazendo?', $translatedText[1]);
 
-        $this->assertInternalType('array', $sourceLanguage);
+        $this->assertIsArray($sourceLanguage);
         $this->assertEquals('en', $sourceLanguage[0]);
         $this->assertEquals('en', $sourceLanguage[0]);
     }
@@ -160,13 +157,12 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->client->translate('What\'s your name?', 'aa', $sourceLanguage);
     }
 
-    /**
-     * @expectedException \GoogleTranslate\Exception\TranslateErrorException
-     * @expectedExceptionMessage Invalid response
-     * @expectedExceptionCode 4
-     */
     public function testTranslateMethodWithSingleStringAndSourceLanguageAndMalformedJsonResponseShouldReturnTranslationErrorException()
     {
+        $this->expectException(\GoogleTranslate\Exception\TranslateErrorException::class);
+        $this->expectExceptionMessage('Invalid response');
+        $this->expectExceptionCode(4);
+
         $requestParams = [
             'POST',
             'https://www.googleapis.com/language/translate/v2',
@@ -179,13 +175,12 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->client->translate('What\'s your name?', 'pt', $sourceLanguage);
     }
 
-    /**
-     * @expectedException \GoogleTranslate\Exception\InvalidTargetLanguageException
-     * @expectedExceptionMessage Invalid target language
-     * @expectedExceptionCode 3
-     */
     public function testLanguagesMethodWithInvalidTargetLanguageShouldReturnInvalidTargetLanguageException()
     {
+        $this->expectException(\GoogleTranslate\Exception\InvalidTargetLanguageException::class);
+        $this->expectExceptionMessage('Invalid target language');
+        $this->expectExceptionCode(3);
+
         $this->client->languages('12');
     }
 
@@ -203,7 +198,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
         $languages = $this->client->languages('pt-br');
 
-        $this->assertInternalType('array', $languages);
+        $this->assertIsArray($languages);
         $this->assertEquals(4, count($languages));
 
         $expectedValues = [
@@ -247,7 +242,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
         $languages = $this->client->languages('pt-br');
 
-        $this->assertInternalType('array', $languages);
+        $this->assertIsArray($languages);
         $this->assertEquals(4, count($languages));
 
         $expectedValues = [
@@ -283,13 +278,12 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->client->languages('aa-aa');
     }
 
-    /**
-     * @expectedException \GoogleTranslate\Exception\LanguagesErrorException
-     * @expectedExceptionMessage Invalid response
-     * @expectedExceptionCode 5
-     */
     public function testLanguagesMethodWithMalformedJsonResponseShouldReturnLanguagesErrorException()
     {
+        $this->expectException(\GoogleTranslate\Exception\LanguagesErrorException::class);
+        $this->expectExceptionMessage('Invalid response');
+        $this->expectExceptionCode(5);
+
         $requestParams = [
             'GET',
             'https://www.googleapis.com/language/translate/v2/languages',
@@ -302,13 +296,12 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->client->languages();
     }
 
-    /**
-     * @expectedException \GoogleTranslate\Exception\InvalidTextException
-     * @expectedExceptionMessage Invalid text
-     * @expectedExceptionCode 2
-     */
     public function testDetectMethodWithInvalidTextShouldReturnInvalidTextException()
     {
+        $this->expectException(\GoogleTranslate\Exception\InvalidTextException::class);
+        $this->expectExceptionMessage('Invalid text');
+        $this->expectExceptionCode(2);
+
         $this->client->detect(null);
     }
 
@@ -326,7 +319,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
         $detection = $this->client->detect('What\'s your name?');
 
-        $this->assertInternalType('array', $detection);
+        $this->assertIsArray($detection);
 
         $this->assertArrayHasKey('confidence', $detection);
         $this->assertEquals(0.25199580192565918, $detection['confidence']);
@@ -368,7 +361,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             'Quem é você?'
         ]);
 
-        $this->assertInternalType('array', $detections);
+        $this->assertIsArray($detections);
 
         foreach ($detections as $index => $detection) {
             $this->assertArrayHasKey('confidence', $detection);
@@ -382,13 +375,12 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    /**
-     * @expectedException \GoogleTranslate\Exception\DetectErrorException
-     * @expectedExceptionMessage Invalid response
-     * @expectedExceptionCode 6
-     */
     public function testDetectMethodWithSingleStringAndMalformedJsonResponseShouldReturnDetectErrorException()
     {
+        $this->expectException(\GoogleTranslate\Exception\DetectErrorException::class);
+        $this->expectExceptionMessage('Invalid response');
+        $this->expectExceptionCode(6);
+
         $requestParams = [
             'POST',
             'https://www.googleapis.com/language/translate/v2/detect',

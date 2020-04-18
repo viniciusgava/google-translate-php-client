@@ -30,5 +30,5 @@ interface TranslateInterface
      * @throws Exception\InvalidSourceLanguageException
      * @throws Exception\TranslateErrorException
      */
-    public function translate($text, $targetLanguage, &$sourceLanguage = null);
+    public function translate($text, string $targetLanguage, &$sourceLanguage = null);
 }

@@ -21,11 +21,12 @@
         }
     },
     "require": {
-        "php": ">=5.6",
-        "guzzlehttp/guzzle": "^6.3.0"
+        "php": ">=7.2",
+        "guzzlehttp/guzzle": "~6.3.0",
+        "ext-json": "*"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "*",
-        "phpunit/phpunit": "5.6.*"
+        "phpunit/phpunit": "^8"
     }
 }
