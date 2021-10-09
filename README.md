@@ -254,7 +254,7 @@ print_r($client->languages());
 | Version | Status     | Repo                 | PHP Version   |
 |---------|------------|----------------------|---------------|
 | 2.*     | Maintained |  [v2][client-2-repo] | >= 5.6 <= 7.1 |
-| 3.x     | Latest     |  [v3][client-3-repo] | >= 7.2        |
+| 3.*     | Latest     |  [v3][client-3-repo] | >= 7.2        |
 
 [client-2-repo]: https://github.com/viniciusgava/google-translate-php-client/tree/2.1
 [client-3-repo]: https://github.com/viniciusgava/google-translate-php-client
